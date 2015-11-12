@@ -11,35 +11,35 @@ var factory = function factory(Pudding) {
   // the easiest way to extend a Babel-based class. Note that the
   // resulting .js file does not have a dependency on Babel.
 
-  var Example = (function (_Pudding) {
-    _inherits(Example, _Pudding);
+  var ExampleTerms = (function (_Pudding) {
+    _inherits(ExampleTerms, _Pudding);
 
-    function Example() {
-      _classCallCheck(this, Example);
+    function ExampleTerms() {
+      _classCallCheck(this, ExampleTerms);
 
-      _get(Object.getPrototypeOf(Example.prototype), "constructor", this).apply(this, arguments);
+      _get(Object.getPrototypeOf(ExampleTerms.prototype), "constructor", this).apply(this, arguments);
     }
 
-    return Example;
+    return ExampleTerms;
   })(Pudding);
 
   ;
 
   // Set up specific data for this class.
-  Example.abi = [{ "constant": true, "inputs": [], "name": "value", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "val", "type": "uint256" }], "name": "setValue", "outputs": [], "type": "function" }, { "inputs": [], "type": "constructor" }];
-  Example.binary = "60606040526000805560408060146000396000f3606060405260e060020a60003504633fa4f245811460245780635524107714602c575b005b603660005481565b6004356000556022565b6060908152602090f3";
+  ExampleTerms.abi = [{ "constant": true, "inputs": [], "name": "arePreConditionsMet", "outputs": [{ "name": "result", "type": "bool" }], "type": "function" }, { "constant": false, "inputs": [], "name": "execute", "outputs": [], "type": "function" }, { "constant": true, "inputs": [], "name": "areMetricsMet", "outputs": [{ "name": "result", "type": "bool" }], "type": "function" }];
+  ExampleTerms.binary = "";
 
-  if ("0xbd353ef1204c2b455f8538cc45288b0be1eb28c3" != "") {
-    Example.address = "0xbd353ef1204c2b455f8538cc45288b0be1eb28c3";
+  if ("" != "") {
+    ExampleTerms.address = "";
 
     // Backward compatibility; Deprecated.
-    Example.deployed_address = "0xbd353ef1204c2b455f8538cc45288b0be1eb28c3";
+    ExampleTerms.deployed_address = "";
   }
 
-  Example.generated_with = "1.0.2";
-  Example.contract_name = "Example";
+  ExampleTerms.generated_with = "1.0.2";
+  ExampleTerms.contract_name = "ExampleTerms";
 
-  return Example;
+  return ExampleTerms;
 };
 
 // Nicety for Node.
@@ -50,5 +50,5 @@ if (typeof module != "undefined") {
 } else {
   // There will only be one version of Pudding in the browser,
   // and we can use that.
-  window.Example = factory;
+  window.ExampleTerms = factory;
 }

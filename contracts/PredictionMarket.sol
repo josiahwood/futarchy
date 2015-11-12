@@ -11,7 +11,13 @@ contract PredictionMarket is Owned
 		uint buyerQuantity;		// in wei
 	}
 
-	Order[] orders;
+	Order[] public orders;
+
+	function ordersLength() constant
+		returns(uint result)
+	{
+		return orders.length;
+	}
 
 	function sellOrder(uint odds)
 	{
@@ -77,6 +83,7 @@ contract PredictionMarket is Owned
 					else
 					{
 						// everything must just be off by a rounding error, so just call it even
+						// I'm not sure that it is even possible to get here
 
 						mo.buyer = buyer;
 						buyerQuantity = 0;
