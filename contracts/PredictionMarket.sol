@@ -24,10 +24,6 @@ contract PredictionMarket is Owned
 		var seller = msg.sender;
 		var sellerQuantity = msg.value;
 		
-		//var buyerQuantity = sellerQuantity * 100 / (100 - odds) - sellerQuantity;
-		//var order = Order(seller, 0, odds, sellerQuantity, buyerQuantity);
-		//orders.push(order);
-
 		while(sellerQuantity > 0)
 		{
 			var maxOddsFound = false;
