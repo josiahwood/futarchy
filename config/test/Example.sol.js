@@ -29,11 +29,11 @@ var factory = function factory(Pudding) {
   Example.abi = [{ "constant": true, "inputs": [], "name": "value", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "val", "type": "uint256" }], "name": "setValue", "outputs": [], "type": "function" }, { "inputs": [], "type": "constructor" }];
   Example.binary = "60606040526000805560408060146000396000f3606060405260e060020a60003504633fa4f245811460245780635524107714602c575b005b603660005481565b6004356000556022565b6060908152602090f3";
 
-  if ("0x3748f4b54752b0478f8b6386b6928c68918b3406" != "") {
-    Example.address = "0x3748f4b54752b0478f8b6386b6928c68918b3406";
+  if ("0x41980ffd441841f3e18127d08bcce26c0c8886b2" != "") {
+    Example.address = "0x41980ffd441841f3e18127d08bcce26c0c8886b2";
 
     // Backward compatibility; Deprecated.
-    Example.deployed_address = "0x3748f4b54752b0478f8b6386b6928c68918b3406";
+    Example.deployed_address = "0x41980ffd441841f3e18127d08bcce26c0c8886b2";
   }
 
   Example.generated_with = "1.0.2";

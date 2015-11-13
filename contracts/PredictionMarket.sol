@@ -23,17 +23,12 @@ contract PredictionMarket is Owned
 	{
 		var seller = msg.sender;
 		var sellerQuantity = msg.value;
-		var buyerQuantity = sellerQuantity * 100 / (100 - odds) - sellerQuantity;
-		var order = Order(seller, 0, odds, sellerQuantity, buyerQuantity);
-		orders.push(order);
-	}
-
-	function buyOrder(uint odds)
-	{
-		var buyer = msg.sender;
-		var buyerQuantity = msg.value;
 		
-		while(buyerQuantity > 0)
+		//var buyerQuantity = sellerQuantity * 100 / (100 - odds) - sellerQuantity;
+		//var order = Order(seller, 0, odds, sellerQuantity, buyerQuantity);
+		//orders.push(order);
+
+		while(sellerQuantity > 0)
 		{
 			var maxOddsFound = false;
 			var maxOddsIndex = 0;
@@ -43,7 +38,7 @@ contract PredictionMarket is Owned
 			{
 				var o = orders[i];
 
-				if(o.buyer == 0 && o.odds > maxOdds)
+				if(o.seller == 0 && o.odds > maxOdds)
 				{
 					maxOddsFound = true;
 					maxOddsIndex = i;
@@ -55,16 +50,92 @@ contract PredictionMarket is Owned
 			{
 				var mo = orders[maxOddsIndex];
 
-				if(buyerQuantity >= mo.buyerQuantity)
+				if(sellerQuantity >= mo.sellerQuantity)
 				{
 					// maxOdds only partially fills order
+
+					mo.seller = seller;
+					sellerQuantity -= mo.sellerQuantity;
+				}
+				else
+				{
+					// maxOdds completely fills order
+
+					var mBuyerQuantity = sellerQuantity * 100 / (100 - mo.odds) - sellerQuantity;
+
+					if(mBuyerQuantity < mo.buyerQuantity)
+					{
+						// create a new order that represents the completed trade
+						var completedOrder = Order(seller, mo.buyer, mo.odds, sellerQuantity, mBuyerQuantity);
+						orders.push(completedOrder);
+
+						// adjust maxOdds in place to preserve the order's priority
+						mo.buyerQuantity -= mBuyerQuantity;
+						mo.sellerQuantity -= sellerQuantity;
+
+						sellerQuantity = 0;
+					}
+					else
+					{
+						// everything must just be off by a rounding error, so just call it even
+						// I'm not sure that it is even possible to get here
+
+						mo.seller = seller;
+						sellerQuantity = 0;
+					}
+				}
+			}
+			else
+			{
+				// no suitable existing order found, so create a new one
+
+				var buyerQuantity = sellerQuantity * 100 / (100 - odds) - sellerQuantity;
+
+				var order = Order(seller, 0, odds, sellerQuantity, buyerQuantity);
+				orders.push(order);
+
+				sellerQuantity = 0;
+			}
+		}
+	}
+
+	function buyOrder(uint odds)
+	{
+		var buyer = msg.sender;
+		var buyerQuantity = msg.value;
+		
+		while(buyerQuantity > 0)
+		{
+			var minOddsFound = false;
+			var minOddsIndex = 0;
+			var minOdds = odds + 1;
+
+			for(var i = 0; i < orders.length; i++)
+			{
+				var o = orders[i];
+
+				if(o.buyer == 0 && o.odds < minOdds)
+				{
+					minOddsFound = true;
+					minOddsIndex = i;
+					minOdds = o.odds;
+				}
+			}
+
+			if(minOddsFound)
+			{
+				var mo = orders[minOddsIndex];
+
+				if(buyerQuantity >= mo.buyerQuantity)
+				{
+					// minOdds only partially fills order
 
 					mo.buyer = buyer;
 					buyerQuantity -= mo.buyerQuantity;
 				}
 				else
 				{
-					// maxOdds completely fills order
+					// minOdds completely fills order
 
 					var mSellerQuantity = buyerQuantity * 100 / mo.odds - buyerQuantity;
 
@@ -74,7 +145,7 @@ contract PredictionMarket is Owned
 						var completedOrder = Order(mo.seller, buyer, mo.odds, mSellerQuantity, buyerQuantity);
 						orders.push(completedOrder);
 
-						// adjust maxOdds in place to preserve the order's priority
+						// adjust minOdds in place to preserve the order's priority
 						mo.buyerQuantity -= buyerQuantity;
 						mo.sellerQuantity -= mSellerQuantity;
 
