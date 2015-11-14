@@ -225,16 +225,67 @@ contract PredictionMarket is Owned
 
 	function awardBuyers() onlyowner
 	{
+		for(var i = 0; i < orders.length; i++)
+		{
+			var o = orders[i];
 
+			if(o.buyer != 0 && o.seller != 0)
+			{
+				o.buyer.send(o.buyerQuantity + o.sellerQuantity);
+			}
+			else if(o.buyer != 0)
+			{
+				o.buyer.send(o.buyerQuantity);
+			}
+			else if(o.seller != 0)
+			{
+				o.seller.send(o.sellerQuantity);
+			}
+		}
+
+		suicide(owner);
 	}
 
 	function awardSellers() onlyowner
 	{
+		for(var i = 0; i < orders.length; i++)
+		{
+			var o = orders[i];
 
+			if(o.buyer != 0 && o.seller != 0)
+			{
+				o.seller.send(o.buyerQuantity + o.sellerQuantity);
+			}
+			else if(o.buyer != 0)
+			{
+				o.buyer.send(o.buyerQuantity);
+			}
+			else if(o.seller != 0)
+			{
+				o.seller.send(o.sellerQuantity);
+			}
+		}
+
+		suicide(owner);
 	}
 
 	function revert() onlyowner
 	{
+		for(var i = 0; i < orders.length; i++)
+		{
+			var o = orders[i];
 
+			if(o.buyer != 0)
+			{
+				o.buyer.send(o.buyerQuantity);
+			}
+
+			if(o.seller != 0)
+			{
+				o.seller.send(o.sellerQuantity);
+			}
+		}
+
+		suicide(owner);
 	}
 }
