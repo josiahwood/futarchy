@@ -133,4 +133,38 @@ contract('PredictionMarket', function(accounts) {
 			assert.equal(order[4].valueOf(), web3.toWei(4.5, "ether"), "orders[3].buyerQuantity should be 4.5eth");
 		}).then(done).catch(done);
 	});
+
+	it("cancelOrder 90%", function(done) {
+		var predictionMarket = PredictionMarket.at(PredictionMarket.address);
+
+		predictionMarket.cancelOrder.sendTransaction(90, web3.toWei(4.5, "ether"), {from:accounts[2]})
+		.then(function(tx) {
+			return predictionMarket.ordersLength.call();
+		}).then(function(ordersLength) {
+			assert.equal(ordersLength.valueOf(), 3, "should be 3 orders after cancelOrder")
+			return predictionMarket.orders.call(0);
+		}).then(function(order) {
+			assert.equal(order[0], accounts[0]);
+			assert.equal(order[1], accounts[2]);
+			assert.equal(order[2], 75);
+			assert.equal(order[3], web3.toWei(2, "ether"));
+			assert.equal(order[4], web3.toWei(6, "ether"));
+		}).then(function () {
+			return predictionMarket.orders.call(1);
+		}).then(function(order) {
+			assert.equal(order[0], 0);
+			assert.equal(order[1], accounts[1]);
+			assert.equal(order[2], 50);
+			assert.equal(order[3], web3.toWei(3, "ether"));
+			assert.equal(order[4], web3.toWei(3, "ether"));
+		}).then(function () {
+			return predictionMarket.orders.call(2);
+		}).then(function(order) {
+			assert.equal(order[0], accounts[3]);
+			assert.equal(order[1], accounts[2]);
+			assert.equal(order[2], 90);
+			assert.equal(order[3], web3.toWei(0.5, "ether"));
+			assert.equal(order[4].valueOf(), web3.toWei(4.5, "ether"), "orders[2].buyerQuantity should be 4.5eth");
+		}).then(done).catch(done);
+	});
 });

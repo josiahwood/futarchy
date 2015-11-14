@@ -173,7 +173,54 @@ contract PredictionMarket is Owned
 
 	function cancelOrder(uint odds, uint quantity)
 	{
+		var deleting = false;
 
+		for(var i = 0; i < orders.length; i++)
+		{
+			var o = orders[i];
+
+			if(!deleting)
+			{
+				if(o.odds == odds)
+				{
+					if(o.buyer == msg.sender && o.seller == 0)
+					{
+						o.buyerQuantity -= quantity;
+
+						if(o.buyerQuantity <= 0)
+						{
+							deleting = true;
+						}
+						else
+						{
+							o.sellerQuantity = o.buyerQuantity * 100 / odds - o.buyerQuantity;
+						}
+					}
+					else if(o.seller == msg.sender && o.buyer == 0)
+					{
+						o.sellerQuantity -= quantity;
+
+						if(o.sellerQuantity <= 0)
+						{
+							deleting = true;
+						}
+						else
+						{
+							o.buyerQuantity = o.sellerQuantity * 100 / (100 - odds) - o.sellerQuantity;
+						}
+					}
+				}
+			}
+			else
+			{
+				orders[i - 1] = o;
+			}
+		}
+
+		if(deleting)
+		{
+			orders.length--;
+		}
 	}
 
 	function awardBuyers() onlyowner
