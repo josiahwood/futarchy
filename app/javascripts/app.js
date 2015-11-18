@@ -16,9 +16,27 @@ window.onload = function() {
 		var ordersLength;
 		var orderIndex = 0;
 
-		$("#orders").empty();
+		$("#bids").empty();
+		$("#asks").empty();
+		$("#completedTrades").empty();
 
-		$("#orders").append(
+		$("#bids").append(
+			"<tr>" +
+        		"<td>Buyer</td>" +
+        		"<td>Odds</td>" +
+        		"<td>Quantity</td>" +
+      		"</tr>"
+      	)
+
+      	$("#asks").append(
+			"<tr>" +
+        		"<td>Seller</td>" +
+        		"<td>Odds</td>" +
+        		"<td>Quantity</td>" +
+      		"</tr>"
+      	)
+
+		$("#completedTrades").append(
 			"<tr>" +
         		"<td>Seller</td>" +
         		"<td>Buyer</td>" +
@@ -29,15 +47,36 @@ window.onload = function() {
       	)
 
 		var orderIteration = function oI(order) {
-			$("#orders").append(
-				"<tr>" +
-					"<td>" + order[0] + "</td>" +
-					"<td>" + order[1] + "</td>" +
-					"<td>" + order[2] + "</td>" +
-					"<td>" + web3.fromWei(order[3], "ether") + "</td>" +
-					"<td>" + web3.fromWei(order[4], "ether") + "</td>" +
-				"</tr>"
-			);
+			if(order[0] == 0)
+			{
+				$("#bids").append(
+					"<tr>" +
+						"<td>" + order[1] + "</td>" +
+						"<td>" + order[2] + "</td>" +
+						"<td>" + web3.fromWei(order[4], "ether") + "</td>" +
+					"</tr>"
+				);
+			}
+			else if(order[1] == 0)
+			{
+				$("#asks").append(
+					"<tr>" +
+						"<td>" + order[0] + "</td>" +
+						"<td>" + order[2] + "</td>" +
+						"<td>" + web3.fromWei(order[3], "ether") + "</td>" +
+					"</tr>"
+				);
+			} else {
+				$("#completedTrades").append(
+					"<tr>" +
+						"<td>" + order[0] + "</td>" +
+						"<td>" + order[1] + "</td>" +
+						"<td>" + order[2] + "</td>" +
+						"<td>" + web3.fromWei(order[3], "ether") + "</td>" +
+						"<td>" + web3.fromWei(order[4], "ether") + "</td>" +
+					"</tr>"
+				);
+			}
 
 			orderIndex++;
 

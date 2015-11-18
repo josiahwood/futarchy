@@ -26,19 +26,31 @@
   <div class="section">
     Contract deployed at: <div id="marketAddress"></div>
   </div>
+  
+  <hr/>
+
   <div class="section">
-    Orders:
-    <table id="orders">
+    <h2>Order Book</h2>
+    <table>
       <tr>
-        <td>Seller</td>
-        <td>Buyer</td>
-        <td>Odds</td>
-        <td>Seller Quantity</td>
-        <td>Buyer Quantity</td>
+        <td>
+          Bids:
+          <table id="bids"></table>
+        </td>
+        <td>
+          Asks:
+          <table id="asks"></table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          Completed Trades:
+          <table id="completedTrades"></table>
+        </td>
       </tr>
     </table>
   </div>
-  
+
   <hr/>
 
   <div class="section">
