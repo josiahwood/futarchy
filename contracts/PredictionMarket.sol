@@ -21,6 +21,12 @@ contract PredictionMarket is Owned
 
 	function sellOrder(uint odds)
 	{
+		if(odds < 1 || odds > 99)
+		{
+			// odds must be from 1-99%
+			return;
+		}
+
 		var seller = msg.sender;
 		var sellerQuantity = msg.value;
 		
@@ -97,6 +103,12 @@ contract PredictionMarket is Owned
 
 	function buyOrder(uint odds)
 	{
+		if(odds < 1 || odds > 99)
+		{
+			// odds must be from 1-99%
+			return;
+		}
+
 		var buyer = msg.sender;
 		var buyerQuantity = msg.value;
 		
