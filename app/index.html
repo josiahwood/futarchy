@@ -1,27 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Default Truffle App</title>
-  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <title>Prediction Market DApp</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .section {
+      margin: 20px;
+    }
+    button {
+      padding: 5px 16px;
+      border-radius: 4px;
+    }
+    button#sellOrder { background-color: red; }
+    button#buyOrder { background-color: green; }
+    button#cancelOrder { background-color: yellow; }
+  </style>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>Hello from Truffle!</h1>
-  <h2>Commands available:</h2>
-  <pre>
-    build           => Build development version of app; creates ./build directory
-    compile         => Compile contracts
-    create:contract => Create a basic contract
-    create:test     => Create a basic test
-    deploy          => Deploy contracts to the network
-    dist            => Create distributable version of app (minified); creates ./dist directory
-    init            => Initialize new Ethereum project, including example contracts and tests
-    init:config     => Initialize default project configuration
-    init:contracts  => Initialize default contracts directory
-    init:tests      => Initialize tests directory structure and helpers
-    list            => List all available tasks
-    test            => Run tests
-    watch           => Watch project for changes and rebuild app automatically
-  </pre>
+  <h1>Prediction Market DApp</h1>
+  <div class="section">
+    Contract deployed at: <div id="marketAddress"></div>
+  </div>
+  <div class="section">
+    Orders:
+    <table id="orders">
+      <tr>
+        <td>Seller</td>
+        <td>Buyer</td>
+        <td>Odds</td>
+        <td>Seller Quantity</td>
+        <td>Buyer Quantity</td>
+      </tr>
+    </table>
+  </div>
+  
+  <hr/>
+
+  <div class="section">
+    <h2>User</h2>
+    Ethereum Account: <select id="userAccounts"></select>
+  </div>
+
+  <hr/>
+  
+  <div class="section">
+    <h2>Sell Order</h2>
+    Odds (1-99%): <input type="text" id="sellerOdds" value="50" /> 
+      Quantity (Ether): <input type="text" id="sellerQuantity" />
+      <button id="sellOrder">Sell</button>
+      <span id="sellOrderResult"></span>
+  </div>
+
+  <hr/>
+
+  <div class="section">
+    <h2>Buy Order</h2>
+    Odds (1-99%): <input type="text" id="buyerOdds" value="50" /> 
+      Quantity (Ether): <input type="text" id="buyerQuantity" />
+      <button id="buyOrder">Buy</button>
+      <span id="buyOrderResult"></span>
+  </div>
+
+  <hr/>
+
+  <div class="section">
+    <h2>Cancel Order</h2>
+    Odds (1-99%): <input type="text" id="cancelOdds" value="50" /> 
+      Quantity (Ether): <input type="text" id="cancelQuantity" />
+      <button id="cancelOrder">Cancel</button>
+      <span id="cancelOrderResult"></span>
+  </div>
+
 </body>
 </html> 
