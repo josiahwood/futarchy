@@ -1,4 +1,5 @@
-window.onload = function() {
+window.onload = function()
+{
 	var accounts = web3.eth.accounts;
 	var myMarketInstance = PredictionMarket.at(PredictionMarket.address);
 
@@ -12,7 +13,8 @@ window.onload = function() {
 	}
 
 	// Update orders
-	function updateOrders() {
+	function updateOrders()
+	{
 		var ordersLength;
 		var orderIndex = 0;
 
@@ -46,27 +48,21 @@ window.onload = function() {
       		"</tr>"
       	)
 
-		var orderIteration = function oI(order) {
+      	var bidOrders = [];
+      	var askOrders = [];
+
+		var orderIteration = function oI(order)
+		{
 			if(order[0] == 0)
 			{
-				$("#bids").append(
-					"<tr>" +
-						"<td>" + order[1] + "</td>" +
-						"<td>" + order[2] + "</td>" +
-						"<td>" + web3.fromWei(order[4], "ether") + "</td>" +
-					"</tr>"
-				);
+				bidOrders.push(order);
 			}
 			else if(order[1] == 0)
 			{
-				$("#asks").append(
-					"<tr>" +
-						"<td>" + order[0] + "</td>" +
-						"<td>" + order[2] + "</td>" +
-						"<td>" + web3.fromWei(order[3], "ether") + "</td>" +
-					"</tr>"
-				);
-			} else {
+				askOrders.push(order);
+			}
+			else
+			{
 				$("#completedTrades").append(
 					"<tr>" +
 						"<td>" + order[0] + "</td>" +
@@ -80,8 +76,41 @@ window.onload = function() {
 
 			orderIndex++;
 
-			if(orderIndex < ordersLength) {
+			if(orderIndex < ordersLength)
+			{
 				myMarketInstance.orders.call(orderIndex).then(oI);
+			}
+			else
+			{
+				bidOrders.sort(function(a, b){return b[2] - a[2];});
+
+				for(var i = 0; i < bidOrders.length; i++)
+				{
+					var bid = bidOrders[i];
+
+					$("#bids").append(
+						"<tr>" +
+							"<td>" + bid[1] + "</td>" +
+							"<td>" + bid[2] + "</td>" +
+							"<td>" + web3.fromWei(bid[4], "ether") + "</td>" +
+						"</tr>"
+					);
+				}
+
+				askOrders.sort(function(a, b){return a[2] - b[2];});
+
+				for(var i = 0; i < askOrders.length; i++)
+				{
+					var ask = askOrders[i];
+
+					$("#asks").append(
+						"<tr>" +
+							"<td>" + ask[0] + "</td>" +
+							"<td>" + ask[2] + "</td>" +
+							"<td>" + web3.fromWei(ask[3], "ether") + "</td>" +
+						"</tr>"
+					);
+				}
 			}
 		};
 
