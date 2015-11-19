@@ -26,6 +26,13 @@
   <div class="section">
     Contract deployed at: <div id="marketAddress"></div>
   </div>
+
+  <hr/>
+
+  <div class="section">
+    <h2>User</h2>
+    Ethereum Account: <select id="userAccounts"></select>
+  </div>
   
   <hr/>
 
@@ -34,12 +41,28 @@
     <table>
       <tr>
         <td>
-          Bids:
+          <h3>Bids</h3>
           <table id="bids"></table>
         </td>
         <td>
-          Asks:
+          <h3>Asks</h3>
           <table id="asks"></table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Sell Order</h3>
+          Odds (1-99%): <input type="text" id="sellerOdds" value="50" /> <br/>
+            Quantity (Ether): <input type="text" id="sellerQuantity" /><br/>
+            <button id="sellOrder">Sell</button>
+            <span id="sellOrderResult"></span>
+        </td>
+        <td>
+          <h3>Buy Order</h3>
+          Odds (1-99%): <input type="text" id="buyerOdds" value="50" /> <br/>
+            Quantity (Ether): <input type="text" id="buyerQuantity" /><br/>
+            <button id="buyOrder">Buy</button>
+            <span id="buyOrderResult"></span>
         </td>
       </tr>
       <tr>
@@ -52,34 +75,7 @@
   </div>
 
   <hr/>
-
-  <div class="section">
-    <h2>User</h2>
-    Ethereum Account: <select id="userAccounts"></select>
-  </div>
-
-  <hr/>
   
-  <div class="section">
-    <h2>Sell Order</h2>
-    Odds (1-99%): <input type="text" id="sellerOdds" value="50" /> 
-      Quantity (Ether): <input type="text" id="sellerQuantity" />
-      <button id="sellOrder">Sell</button>
-      <span id="sellOrderResult"></span>
-  </div>
-
-  <hr/>
-
-  <div class="section">
-    <h2>Buy Order</h2>
-    Odds (1-99%): <input type="text" id="buyerOdds" value="50" /> 
-      Quantity (Ether): <input type="text" id="buyerQuantity" />
-      <button id="buyOrder">Buy</button>
-      <span id="buyOrderResult"></span>
-  </div>
-
-  <hr/>
-
   <div class="section">
     <h2>Cancel Order</h2>
     Odds (1-99%): <input type="text" id="cancelOdds" value="50" /> 

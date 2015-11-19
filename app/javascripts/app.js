@@ -111,6 +111,16 @@ window.onload = function()
 						"</tr>"
 					);
 				}
+
+				if(askOrders.length > 0)
+				{
+					$("#buyerOdds").val((askOrders[0])[2]);
+				}
+
+				if(bidOrders.length > 0)
+				{
+					$("#sellerOdds").val((bidOrders[0])[2]);
+				}
 			}
 		};
 
