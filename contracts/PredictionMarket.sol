@@ -12,6 +12,13 @@ contract PredictionMarket is Owned
 	}
 
 	Order[] public orders;
+	uint lastTradedOdds = 50;
+	uint endTime;
+
+	function PredictionMarket(uint _endTime)
+	{
+		endTime = _endTime;
+	}
 
 	function ordersLength() constant
 		returns(uint result)
@@ -21,8 +28,9 @@ contract PredictionMarket is Owned
 
 	function sellOrder(uint odds)
 	{
-		if(odds < 1 || odds > 99)
+		if(now >= endTime || odds < 1 || odds > 99)
 		{
+			// must be valid time
 			// odds must be from 1-99%
 			return;
 		}
@@ -50,6 +58,7 @@ contract PredictionMarket is Owned
 
 			if(maxOddsFound)
 			{
+				lastTradedOdds = maxOdds;
 				var mo = orders[maxOddsIndex];
 
 				if(sellerQuantity >= mo.sellerQuantity)
@@ -103,8 +112,9 @@ contract PredictionMarket is Owned
 
 	function buyOrder(uint odds)
 	{
-		if(odds < 1 || odds > 99)
+		if(now >= endTime || odds < 1 || odds > 99)
 		{
+			// must be valid time
 			// odds must be from 1-99%
 			return;
 		}
@@ -132,6 +142,7 @@ contract PredictionMarket is Owned
 
 			if(minOddsFound)
 			{
+				lastTradedOdds = minOdds;
 				var mo = orders[minOddsIndex];
 
 				if(buyerQuantity >= mo.buyerQuantity)
@@ -185,6 +196,11 @@ contract PredictionMarket is Owned
 
 	function cancelOrder(uint odds, uint quantity)
 	{
+		if(now >= endTime)
+		{
+			// must be valid time
+		}
+
 		var deleting = false;
 
 		for(var i = 0; i < orders.length; i++)
@@ -233,6 +249,33 @@ contract PredictionMarket is Owned
 		{
 			orders.length--;
 		}
+	}
+
+	function cancelIncompleteOrders() onlyowner
+	{
+		if(now >= endTime)
+		{
+			for(var i = 0; i < orders.length; i++)
+			{
+				var o = orders[i];
+
+				if(o.buyer == 0)
+				{
+					o.seller.send(o.sellerQuantity);
+				}
+
+				if(o.seller == 0)
+				{
+					o.buyer.send(o.buyerQuantity);
+				}
+			}
+		}
+	}
+
+	function evaluateOdds() constant
+		returns(uint)
+	{
+		return lastTradedOdds;
 	}
 
 	function awardBuyers() onlyowner
