@@ -24,6 +24,7 @@ contract PredictionMarket is Owned
 		if(odds < 1 || odds > 99)
 		{
 			// odds must be from 1-99%
+			msg.sender.send(msg.value);
 			return;
 		}
 
@@ -106,6 +107,7 @@ contract PredictionMarket is Owned
 		if(odds < 1 || odds > 99)
 		{
 			// odds must be from 1-99%
+			msg.sender.send(msg.value);
 			return;
 		}
 
