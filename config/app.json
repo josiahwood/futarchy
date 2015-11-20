@@ -18,6 +18,7 @@
   },
   "deploy": [
     // Names of contracts that should be deployed to the network.
+    "Futarchy",
     "PredictionMarket"
   ],
   "rpc": {
