@@ -32,6 +32,7 @@ contract PredictionMarket is Owned
 		{
 			// must be valid time
 			// odds must be from 1-99%
+			msg.sender.send(msg.value);
 			return;
 		}
 
@@ -116,6 +117,7 @@ contract PredictionMarket is Owned
 		{
 			// must be valid time
 			// odds must be from 1-99%
+			msg.sender.send(msg.value);
 			return;
 		}
 

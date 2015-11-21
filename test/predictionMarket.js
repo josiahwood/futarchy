@@ -1,9 +1,11 @@
 contract('PredictionMarket', function(accounts) {
  	it("contract initialization", function(done) {
-  		var predictionMarket = PredictionMarket.at(PredictionMarket.address);
-
-  		predictionMarket.ordersLength.call()
-  		.then(function(ordersLength) {
+  		var latestBlock = web3.eth.getBlock("latest");
+  		var time = latestBlock.timestamp + 60;	// 1 minute from now
+  		PredictionMarket.new(time).then(function(predictionMarket) {
+  			PredictionMarket.address = predictionMarket.address;
+  			return predictionMarket.ordersLength.call();
+  		}).then(function(ordersLength) {
   			assert.equal(ordersLength, 0, "should be 0 orders initially");
   		}).then(done).catch(done);
 	});
@@ -15,7 +17,7 @@ contract('PredictionMarket', function(accounts) {
 		.then(function(tx) {
 			return predictionMarket.ordersLength.call();
 		}).then(function(ordersLength) {
-			assert.equal(ordersLength, 1, "should be 1 order after sellOrder")
+			assert.equal(ordersLength.valueOf(), 1, "should be 1 order after sellOrder")
 		}).then(function() {
 			return predictionMarket.orders.call(0);
 		}).then(function(order) {
