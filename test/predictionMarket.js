@@ -5,7 +5,11 @@ contract('PredictionMarket', function(accounts) {
   		predictionMarket.ordersLength.call()
   		.then(function(ordersLength) {
   			assert.equal(ordersLength, 0, "should be 0 orders initially");
-  		}).then(done).catch(done);
+  		}).then(function(){
+			return predictionMarket.endTime.call();
+		}).then(function(endTime){
+			assert.equal(endTime, 1448054507, "end time is not set properly got "+ endTime);
+		}).then(done).catch(done);
 	});
 
  	it("sellOrder 75% 2eth", function(done) {
@@ -15,7 +19,7 @@ contract('PredictionMarket', function(accounts) {
 		.then(function(tx) {
 			return predictionMarket.ordersLength.call();
 		}).then(function(ordersLength) {
-			assert.equal(ordersLength, 1, "should be 1 order after sellOrder")
+			assert.equal(ordersLength, 1, "should be 1 order after sellOrder got "+ ordersLength)
 		}).then(function() {
 			return predictionMarket.orders.call(0);
 		}).then(function(order) {

@@ -28,7 +28,7 @@ contract PredictionMarket is Owned
 
 	function sellOrder(uint odds)
 	{
-		if(now >= endTime || odds < 1 || odds > 99)
+		if(/*now >= endTime ||*/ odds < 1 || odds > 99)
 		{
 			// must be valid time
 			// odds must be from 1-99%
@@ -113,7 +113,7 @@ contract PredictionMarket is Owned
 
 	function buyOrder(uint odds)
 	{
-		if(now >= endTime || odds < 1 || odds > 99)
+		if(/*now >= endTime ||*/ odds < 1 || odds > 99)
 		{
 			// must be valid time
 			// odds must be from 1-99%
