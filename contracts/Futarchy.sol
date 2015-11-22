@@ -4,10 +4,12 @@ contract Futarchy
 {
 	enum PreCondition{None}
 	enum Metric{AccountBalance}
-	enum Action{}
+	enum Action{Send}
 
 	struct Proposal
 	{
+		// all of the *Time fields get set to 0 when they have been executed
+
 		uint marketEndTime;
 		PredictionMarket acceptanceMarket;
 		PredictionMarket rejectionMarket;
@@ -15,8 +17,11 @@ contract Futarchy
 		uint preConditionEvaluationTime;
 		PreCondition preCondition;
 
-		uint metricEvaluationTime;
+		uint metricStartEvaluationTime;
+		uint metricEndEvaluationTime;
 		Metric metric;
+		uint startingAccountBalance;
+
 		Action action;
 	}
 
@@ -28,7 +33,7 @@ contract Futarchy
 		// constructor
 	}
 
-	function addProposal(uint marketEndTime, uint preConditionEvaluationTime, PreCondition preCondition, uint metricEvaluationTime, Metric metric, Action action)
+	function addProposal(uint marketEndTime, uint preConditionEvaluationTime, PreCondition preCondition, uint metricStartEvaluationTime, uint metricEndEvaluationTime, Metric metric, Action action)
 	{
 		PredictionMarket acceptanceMarket = new PredictionMarket(marketEndTime);
 		PredictionMarket rejectionMarket = new PredictionMarket(marketEndTime);
@@ -39,8 +44,10 @@ contract Futarchy
 			rejectionMarket,
 			preConditionEvaluationTime,
 			preCondition,
-			metricEvaluationTime,
+			metricStartEvaluationTime,
+			metricEndEvaluationTime,
 			metric,
+			0,
 			action
 		);
 
@@ -51,19 +58,31 @@ contract Futarchy
 	{
 		Proposal proposal = proposals[index];
 
-		if(now < proposal.marketEndTime)
+		if(proposal.marketEndTime == 0 || now < proposal.marketEndTime)
 		{
 			return;
 		}
 
+		uint acceptanceOdds = proposal.acceptanceMarket.evaluateOdds();
+		uint rejectionOdds = proposal.rejectionMarket.evaluateOdds();
 
+		if(acceptanceOdds <= rejectionOdds)
+		{
+			proposal.acceptanceMarket.revert();
+		}
+		else
+		{
+			proposal.rejectionMarket.revert();
+		}
+
+		proposal.marketEndTime = 0;
 	}
 
 	function evaluateProposalPreCondition(uint index)
 	{
 		Proposal proposal = proposals[index];
 
-		if(now < proposal.preConditionEvaluationTime)
+		if(proposal.preConditionEvaluationTime == 0 || now < proposal.preConditionEvaluationTime)
 		{
 			return;
 		}
@@ -72,10 +91,12 @@ contract Futarchy
 
 		if(!isPreConditionMet)
 		{
+			// need to see what happens here when one has already been reverted by evaluateProposalMarketEnd
 			proposal.acceptanceMarket.revert();
 			proposal.rejectionMarket.revert();
-			return;
 		}
+
+		proposal.preConditionEvaluationTime = 0;
 	}
 
 	function getIsPreConditionMet(Proposal proposal) private
