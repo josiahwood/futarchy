@@ -10,9 +10,10 @@ contract Futarchy
 	{
 		// all of the *Time fields get set to 0 when they have been executed
 
-		uint marketEndTime;
+		uint marketEvaluationTime;
 		PredictionMarket acceptanceMarket;
 		PredictionMarket rejectionMarket;
+		bool accepted;
 
 		uint preConditionEvaluationTime;
 		PreCondition preCondition;
@@ -22,7 +23,10 @@ contract Futarchy
 		Metric metric;
 		uint startingAccountBalance;
 
+		uint actionEvaluationTime;
 		Action action;
+		uint sendQuantity;
+		address recipientAddress;
 	}
 
 	// should this be a map?
@@ -33,32 +37,51 @@ contract Futarchy
 		// constructor
 	}
 
-	function addProposal(uint marketEndTime, uint preConditionEvaluationTime, PreCondition preCondition, uint metricStartEvaluationTime, uint metricEndEvaluationTime, Metric metric, Action action)
+	function addProposal(uint marketEvaluationTime, uint preConditionEvaluationTime, PreCondition preCondition, uint metricStartEvaluationTime, uint metricEndEvaluationTime, Metric metric, uint actionEvaluationTime, Action action, uint sendQuantity, address recipientAddress)
+		returns(uint)
 	{
-		PredictionMarket acceptanceMarket = new PredictionMarket(marketEndTime);
-		PredictionMarket rejectionMarket = new PredictionMarket(marketEndTime);
+		if(preConditionEvaluationTime <= marketEvaluationTime)
+		{
+			// pre-conditions cannot be evaluated while the market is open
+			throw;
+		}
+
+		if(metricEndEvaluationTime <= metricStartEvaluationTime)
+		{
+			throw;
+		}
+
+		PredictionMarket acceptanceMarket = new PredictionMarket(marketEvaluationTime);
+		PredictionMarket rejectionMarket = new PredictionMarket(marketEvaluationTime);
 
 		var proposal = Proposal(
-			marketEndTime,
+			marketEvaluationTime,
 			acceptanceMarket,
 			rejectionMarket,
+			false,
+
 			preConditionEvaluationTime,
 			preCondition,
+
 			metricStartEvaluationTime,
 			metricEndEvaluationTime,
 			metric,
 			0,
-			action
+
+			actionEvaluationTime,
+			action,
+			sendQuantity,
+			recipientAddress
 		);
 
-		proposals.push(proposal);
+		return proposals.push(proposal);
 	}
 
-	function evaluateProposalMarketEnd(uint index)
+	function evaluateProposalMarket(uint index)
 	{
 		Proposal proposal = proposals[index];
 
-		if(proposal.marketEndTime == 0 || now < proposal.marketEndTime)
+		if(proposal.marketEvaluationTime == 0 || now < proposal.marketEvaluationTime)
 		{
 			return;
 		}
@@ -73,9 +96,10 @@ contract Futarchy
 		else
 		{
 			proposal.rejectionMarket.revert();
+			proposal.accepted = true;
 		}
 
-		proposal.marketEndTime = 0;
+		proposal.marketEvaluationTime = 0;
 	}
 
 	function evaluateProposalPreCondition(uint index)
@@ -87,33 +111,121 @@ contract Futarchy
 			return;
 		}
 
-		bool isPreConditionMet = getIsPreConditionMet(proposal);
+		bool isPreConditionMet;
+
+		if(proposal.preCondition == PreCondition.None)
+		{
+			isPreConditionMet = true;
+		}
+		else
+		{
+			// support other pre-conditions in the future
+			throw;
+		}
 
 		if(!isPreConditionMet)
 		{
-			// need to see what happens here when one has already been reverted by evaluateProposalMarketEnd
-			proposal.acceptanceMarket.revert();
-			proposal.rejectionMarket.revert();
+			if(proposal.accepted)
+			{
+				proposal.acceptanceMarket.revert();
+			}
+			else
+			{
+				proposal.rejectionMarket.revert();
+			}
 		}
 
 		proposal.preConditionEvaluationTime = 0;
 	}
 
-	function getIsPreConditionMet(Proposal proposal) private
-		returns(bool)
+	function evaluateProposalMetricStart(uint index)
 	{
-		if(proposal.preCondition == PreCondition.None)
+		Proposal proposal = proposals[index];
+
+		if(proposal.metricStartEvaluationTime == 0 || now < proposal.metricStartEvaluationTime)
 		{
-			return true;
+			return;
+		}
+
+		if(proposal.metric == Metric.AccountBalance)
+		{
+			proposal.startingAccountBalance = this.balance;
 		}
 		else
 		{
+			// support other metrics in the future
 			throw;
 		}
+
+		proposal.metricStartEvaluationTime = 0;
 	}
 
-	function getIsMetricMet(Proposal proposal) private
+	function evaluateProposalAction(uint index)
 	{
+		Proposal proposal = proposals[index];
 
+		if(!proposal.accepted || proposal.actionEvaluationTime == 0 || now < proposal.actionEvaluationTime)
+		{
+			return;
+		}
+
+		if(proposal.action == Action.Send)
+		{
+			proposal.recipientAddress.send(proposal.sendQuantity);
+		}
+		else
+		{
+			// support other actions in the future
+			throw;
+		}
+
+		proposal.actionEvaluationTime = 0;
+	}
+
+	function evaluateProposalMetricEnd(uint index)
+	{
+		Proposal proposal = proposals[index];
+
+		if(proposal.metricEndEvaluationTime == 0 || now < proposal.metricEndEvaluationTime)
+		{
+			return;
+		}
+
+		bool isMetricMet;
+
+		if(proposal.metric == Metric.AccountBalance)
+		{
+			isMetricMet = this.balance > proposal.startingAccountBalance;
+		}
+		else
+		{
+			// support other metrics in the future
+			throw;
+		}
+
+		if(proposal.accepted)
+		{
+			if(isMetricMet)
+			{
+				proposal.acceptanceMarket.awardBuyers();
+			}
+			else
+			{
+				proposal.acceptanceMarket.awardSellers();
+			}
+		}
+		else
+		{
+			if(isMetricMet)
+			{
+				proposal.rejectionMarket.awardBuyers();
+			}
+			else
+			{
+				proposal.rejectionMarket.awardSellers();
+			}
+		}
+
+		proposal.metricEndEvaluationTime = 0;
 	}
 }
