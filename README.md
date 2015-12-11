@@ -7,7 +7,7 @@ Compile Instructions:
 <p>install truffle <br>
 install eth-testrpc
 
-run command
+<p>run command:
 <ul>
   <li>
     git clone "https://github.com/josiahwood/futarchy.git"
@@ -20,8 +20,8 @@ run command
   </li>
 </ul>
 </div>
-
-Troubleshooting:
+<div id="Troubleshooting">
+<p>Troubleshooting:
 
 > The contract code couldn't be stored, please check your gas amount.
 
@@ -59,3 +59,4 @@ contract.new({
           });
 </pre>
 change the gas to a bigger or arbitrary value and save
+</div>
