@@ -4,13 +4,13 @@
 
 Compile Instructions:
 
-install truffle
-install eth-testrpc
+<p>install truffle
+<p>install eth-testrpc
 
 run command
 > git clone "https://github.com/josiahwood/futarchy.git"
-cd futarchy
-truffle deploy
+>cd futarchy
+>truffle deploy
 
 Troubleshooting:
 
@@ -34,18 +34,18 @@ if it is installed locally then I think the command for that is
 after you know where truffle is installed...
 
 >cd [truffle location]/truffle/lib/
-sudo vim contracts.es6
+>sudo vim contracts.es6
 
 there should be a line of code like this
 >contract.new({
-            from: coinbase,
-            gas: 3141592,
-            gasPrice: 1000000000000 // I'm not sure why this is so high. geth made me do it.
-          }).then(function(instance) {
-            contract_class.address = instance.address;
-            callback(null, contract_class);
-          }).catch(function(err) {
-            callback(new DeployError(err.message, key));
-          });
+>            from: coinbase,
+>            gas: 3141592,
+>            gasPrice: 1000000000000 // I'm not sure why this is so high. geth made me do it.
+>          }).then(function(instance) {
+>            contract_class.address = instance.address;
+>            callback(null, contract_class);
+>          }).catch(function(err) {
+>            callback(new DeployError(err.message, key));
+>          });
 
 change the gas to a bigger or arbitrary value and save
