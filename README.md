@@ -4,8 +4,8 @@
 <div id="compileInstructions">
 Compile Instructions:
 
-<p>install truffle
-<p>install eth-testrpc
+<p>install truffle <br>
+install eth-testrpc
 
 run command
 <ul>
