@@ -16,8 +16,9 @@ install eth-testrpc
 </pre>
 <div id="Troubleshooting">
 <p>Troubleshooting:</p>
-
-> The contract code couldn't be stored, please check your gas amount.
+<pre>
+  The contract code couldn't be stored, please check your gas amount.
+</pre>
 
   This issue could be caused by a small gas limit.
 
@@ -27,19 +28,26 @@ install eth-testrpc
   I used vim to change the file but I think any text editor can be used as long as it has root permissions.
 
 
-open terminal:
-> npm list -g truffle;
+<p>open terminal:</p>
+<pre>
+ npm list -g truffle;
+</pre>
 
 this will give you the location of where truffle is install on your machine if it is install globally...<br>
 if it is installed locally then I think the command for that is<br>
->npm bin
+<pre>
+npm bin
+</pre>
 
 after you know where truffle is installed... <br>
+
 <pre>
   cd [truffle location]/truffle/lib/ <br>
   sudo vim contracts.es6 <br>
 </pre>
+
 there should be a line of code like this: <br>
+
 <pre>
 contract.new({
             from: coinbase,
