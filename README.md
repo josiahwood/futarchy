@@ -46,7 +46,7 @@ after you know where truffle is installed... <br>
 >sudo vim contracts.es6 <br>
 
 there should be a line of code like this: <br>
-
+<code>
 contract.new({<br>
             from: coinbase,<br>
             gas: 3141592,<br>
@@ -57,5 +57,5 @@ contract.new({<br>
           }).catch(function(err) {<br>
             callback(new DeployError(err.message, key));<br>
           });<br>
-
+</code>
 change the gas to a bigger or arbitrary value and save
