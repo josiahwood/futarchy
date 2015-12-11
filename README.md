@@ -7,21 +7,15 @@ Compile Instructions:
 <p>install truffle <br>
 install eth-testrpc
 
-<p>run command:
-<ul>
-  <li>
+<p>run commands: <br>
+
+<pre>
     git clone "https://github.com/josiahwood/futarchy.git"
-  </li>
-  <li>
     cd futarchy
-  </li>
-  <li>
     truffle deploy
-  </li>
-</ul>
-</div>
+</pre>
 <div id="Troubleshooting">
-<p>Troubleshooting:
+<p>Troubleshooting:</p>
 
 > The contract code couldn't be stored, please check your gas amount.
 
@@ -41,10 +35,10 @@ if it is installed locally then I think the command for that is<br>
 >npm bin
 
 after you know where truffle is installed... <br>
-
->cd [truffle location]/truffle/lib/ <br>
->sudo vim contracts.es6 <br>
-
+<pre>
+  cd [truffle location]/truffle/lib/ <br>
+  sudo vim contracts.es6 <br>
+</pre>
 there should be a line of code like this: <br>
 <pre>
 contract.new({
