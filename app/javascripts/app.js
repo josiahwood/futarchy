@@ -1,9 +1,7 @@
 window.onload = function()
 {
 	var accounts = web3.eth.accounts;
-	var myMarketInstance = PredictionMarket.at(PredictionMarket.address);
-
-	$("#marketAddress").html(PredictionMarket.address);
+	var myMarketInstance;
 
 	for(var i = 0; i < accounts.length; i++)
 	{
@@ -15,6 +13,8 @@ window.onload = function()
 	// Update orders
 	function updateOrders()
 	{
+		console.log("updateOrders");
+		
 		var ordersLength;
 		var orderIndex = 0;
 
@@ -134,7 +134,16 @@ window.onload = function()
 		});
 	}
 
-	updateOrders();
+	var latestBlock = web3.eth.getBlock("latest");
+  	var time = latestBlock.timestamp + 600;	// 10 minutes from now
+  	PredictionMarket.new(time, {from:accounts[0]}).then(function(predictionMarket) {
+  		PredictionMarket.address = predictionMarket.address;
+  		myMarketInstance = predictionMarket;
+		$("#marketAddress").html(PredictionMarket.address);
+  		updateOrders();
+  	});
+	
+	//updateOrders();
 
 	// sellOrder
 	function sellOrder(address, odds, quantity)
