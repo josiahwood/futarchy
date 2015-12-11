@@ -46,16 +46,16 @@ after you know where truffle is installed... <br>
 >sudo vim contracts.es6 <br>
 
 there should be a line of code like this: <br>
-<code>
-contract.new({<br>
-            from: coinbase,<br>
-            gas: 3141592,<br>
-            gasPrice: 1000000000000 // I'm not sure why this is so high. geth made me do it.<br>
-          }).then(function(instance) {<br>
-            contract_class.address = instance.address;<br>
-            callback(null, contract_class);<br>
-          }).catch(function(err) {<br>
-            callback(new DeployError(err.message, key));<br>
-          });<br>
-</code>
+<pre>
+contract.new({
+            from: coinbase,
+            gas: 3141592,
+            gasPrice: 1000000000000 // I'm not sure why this is so high. geth made me do it.
+          }).then(function(instance) {
+            contract_class.address = instance.address;
+            callback(null, contract_class);
+          }).catch(function(err) {
+            callback(new DeployError(err.message, key));
+          });
+</pre>
 change the gas to a bigger or arbitrary value and save
