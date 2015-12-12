@@ -10,7 +10,9 @@ sudo python setup.py install
 sudo pip install eth-testrpc
 
 # nodejs v5.0.0
+. ~/.nvm/nvm.sh
 nvm use v5.0.0
+nvm alias default 5.0.0
 
 # truffle
 sudo npm install -g truffle
