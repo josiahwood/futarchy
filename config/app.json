@@ -18,11 +18,11 @@
 	},
 	"deploy": [
 		// Names of contracts that should be deployed to the network.
-		// "Futarchy",
+		"Futarchy",
 		"PredictionMarket"
 	],
 	"rpc": {
-		"host": "futarchy-josiahwood.c9users.io",
-		"port": 8081
+		"host": "LocalHost",
+		"port": 8545
 	}
 }
